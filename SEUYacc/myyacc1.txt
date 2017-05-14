@@ -1,0 +1,43 @@
+%{
+/*  myyacc.txt
+*/
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string>
+using namespace std;
+
+%}
+
+%token IDENTIFIER NUMBER
+%token INT VOID
+
+%left '+'
+%%
+stmt : expr_stmt
+	| compound_stmt
+	;
+expr_stmt : IDENTIFIER '=' expr ';'
+	;
+compound_stmt : '{' local_decls stmt_list '}'
+	;
+stmt_list : stmt_list stmt
+	|
+	;
+local_decls : local_decls local_decl
+	|
+	;
+local_decl : type_spec IDENTIFIER ';'
+	;
+type_spec : VOID
+	| INT
+	;
+expr : expr '+' expr
+	| '-' expr
+	| expr '-' expr
+	| expr '*' expr
+	| '(' expr ')'
+	| IDENTIFIER
+	| NUMBER   
+	;
+%%

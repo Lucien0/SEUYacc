@@ -1,0 +1,50 @@
+%{
+/*  myyacc.txt
+*/
+#include <vector>
+#include <stack>
+#include <string>
+#include "symTable.h"
+using namespace std;
+
+int yylval;
+%}
+
+%token IDENTIFIER NUM
+%token INT VOID
+
+%left '+' '-'
+%left '*' '/' '%'
+
+%%
+stmt_list : stmt_list stmt
+	|
+	;
+stmt : expr_stmt
+	| compound_stmt
+	;
+expr_stmt : IDENTIFIER '=' expr ';'	{sym_table.setValue(s[0],s[2]);}
+	| ';'
+	;
+compound_stmt : '{' local_decls stmt_list '}'
+	;
+local_decls : local_decls local_decl
+	|
+	;
+local_decl : type_spec IDENTIFIER ';'
+	;
+type_spec : VOID
+	| INT
+	;
+expr : expr 'EQ' expr	{$$=(s[0]==s[2]);}
+	| expr '+' expr	{$$=s[0]+s[2];}
+	| expr '-' expr	{$$=s[0]-s[2];}
+	| expr '*' expr	{$$=s[0]*s[2];}
+	| expr '/' expr {$$=s[0]/s[2];}
+	| expr '%' expr {$$=s[0]%s[2];}
+	| '(' expr ')'	{$$=s[1];}
+	| '(' '-' expr ')'	{$$=0-s[2];}
+	| IDENTIFIER	{$$=sym_table.getValue(s[0]);}
+	| NUM		{$$=yylval;}
+	;
+%%
