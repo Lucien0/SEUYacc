@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "SeuYacc.h"
+#include <cstdlib>
 ifstream ifile;
 ofstream ofile, ofile1;
 
